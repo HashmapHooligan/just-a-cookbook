@@ -71,11 +71,6 @@
           class="form-page__ingredient-row"
         >
           <input
-            v-model="ing.emoji"
-            class="form-page__input form-page__input--emoji font-body-md"
-            placeholder="🥕"
-          />
-          <input
             v-model="ing.name"
             class="form-page__input form-page__input--name font-body-md"
             :placeholder="t('form.ingredientName')"
@@ -334,12 +329,6 @@ async function submit() {
 .form-page__import-error {
   color: var(--color-negative);
   margin: 4px 0 0;
-}
-
-.form-page__input--emoji {
-  width: 60px;
-  text-align: center;
-  font-size: 20px;
 }
 
 .form-page__input--name {

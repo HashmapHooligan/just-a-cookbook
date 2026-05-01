@@ -180,8 +180,8 @@ async function doDelete() {
 }
 
 .detail-page__ingredients {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 4px;
 }
 

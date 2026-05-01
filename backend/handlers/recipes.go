@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -12,11 +13,37 @@ import (
 )
 
 type RecipeHandler struct {
-	db *sql.DB
+	db  *sql.DB
+	llm *LLMClient
 }
 
-func NewRecipeHandler(db *sql.DB) *RecipeHandler {
-	return &RecipeHandler{db: db}
+func NewRecipeHandler(db *sql.DB, llm *LLMClient) *RecipeHandler {
+	return &RecipeHandler{db: db, llm: llm}
+}
+
+func (h *RecipeHandler) fillEmojis(r *http.Request, recipe *models.Recipe) {
+	if h.llm == nil {
+		return
+	}
+	var indices []int
+	var names []string
+	for i, ing := range recipe.Ingredients {
+		if ing.Emoji == "" && ing.Name != "" {
+			indices = append(indices, i)
+			names = append(names, ing.Name)
+		}
+	}
+	if len(names) == 0 {
+		return
+	}
+	emojis, err := h.llm.inferEmojis(r.Context(), names)
+	if err != nil {
+		log.Printf("fillEmojis: failed: %v", err)
+		return
+	}
+	for j, i := range indices {
+		recipe.Ingredients[i].Emoji = emojis[j]
+	}
 }
 
 func (h *RecipeHandler) List(w http.ResponseWriter, r *http.Request) {
@@ -92,6 +119,8 @@ func (h *RecipeHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	h.fillEmojis(r, &recipe)
+
 	id, err := h.insertRecipe(r, recipe)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "insert failed")
@@ -122,6 +151,8 @@ func (h *RecipeHandler) Update(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "title is required")
 		return
 	}
+
+	h.fillEmojis(r, &recipe)
 
 	tx, err := h.db.BeginTx(r.Context(), nil)
 	if err != nil {

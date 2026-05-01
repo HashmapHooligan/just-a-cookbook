@@ -35,8 +35,9 @@ func main() {
 	}
 	defer database.Close()
 
-	recipeHandler := handlers.NewRecipeHandler(database)
-	importHandler := handlers.NewImportHandler(llmURL, llmKey, llmModel)
+	llmClient := handlers.NewLLMClient(llmURL, llmKey, llmModel)
+	recipeHandler := handlers.NewRecipeHandler(database, llmClient)
+	importHandler := handlers.NewImportHandler(llmClient)
 
 	r := chi.NewRouter()
 	r.Use(chiMiddleware.Logger)
