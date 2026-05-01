@@ -1,3 +1,5 @@
+/data
+
 # Created by https://www.toptal.com/developers/gitignore/api/jetbrains+all,go,vuejs
 # Edit at https://www.toptal.com/developers/gitignore?templates=jetbrains+all,go,vuejs
 
@@ -121,4 +123,8 @@ npm-debug.log
 yarn-error.log
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains+all,go,vuejs
+
+# Local secrets
+backend/.env
+data/cookbook.db
 

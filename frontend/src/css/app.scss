@@ -1,1 +1,166 @@
-// app global css
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+// Design system tokens
+:root {
+  --color-surface: #fff8f3;
+  --color-surface-container-low: #fff2e0;
+  --color-surface-container: #ffebce;
+  --color-surface-container-high: #ffe5ba;
+  --color-surface-container-highest: #ffdea6;
+  --color-surface-variant: #ffdea6;
+  --color-on-surface: #271900;
+  --color-on-surface-variant: #48454f;
+  --color-outline: #797580;
+  --color-outline-variant: #c9c4d1;
+  --color-primary: #020013;
+  --color-primary-container: #1e104e;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #887cbe;
+  --color-primary-fixed: #e6deff;
+  --color-primary-fixed-dim: #cbbeff;
+  --color-secondary: #b12e0a;
+  --color-secondary-container: #fd643e;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #5e1000;
+  --color-tertiary-container: #28113c;
+  --color-background: #fff8f3;
+  --color-header: #ffc85c;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 12px;
+  --spacing-md: 24px;
+  --spacing-lg: 48px;
+  --spacing-xl: 64px;
+  --spacing-gutter: 24px;
+}
+
+// Global base
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+
+// Typography utilities
+.font-headline-xl {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 48px;
+  letter-spacing: -0.02em;
+}
+
+.font-headline-lg {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 40px;
+  letter-spacing: -0.01em;
+}
+
+.font-headline-md {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+}
+
+.font-body-lg {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+.font-body-md {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.font-body-sm {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.font-label-lg {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.font-label-md {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.font-instruction-step {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 32px;
+}
+
+// Material Symbols
+.material-symbol {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+}
+
+// Recipe card hover
+.recipe-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(30, 16, 78, 0.12);
+  }
+}
+
+// Tag chip
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+// Step number circle
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--color-primary-container);
+  color: var(--color-on-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  flex-shrink: 0;
+}

@@ -9,6 +9,7 @@ This project is called "Just a Cookbook", since it shall be exactly that: just a
 - Recipe display with option to edit recipe
 - Adding recipes manually via form
 - Adding recipes by importing images and parsing them via LLM
+- UI language toggle (English / German) — recipes themselves are not translated
 
 # Architecture
 As a backend language, Go is used - since I like the language for its simplicity, type safety and speed. Persistence is done with an SQLite database. LLMs are used from an OpenAI compatible API.

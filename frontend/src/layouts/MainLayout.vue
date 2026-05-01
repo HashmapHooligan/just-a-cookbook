@@ -1,81 +1,49 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+  <q-layout view="hHh lpR fFf">
+    <q-header style="background-color: var(--color-header)">
+      <q-toolbar style="color: var(--color-primary-container)">
+        <q-toolbar-title>
+          <router-link
+            to="/"
+            class="font-headline-md no-underline"
+            style="color: var(--color-primary-container)"
+          >
+            Just a Cookbook
+          </router-link>
+        </q-toolbar-title>
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-btn
+          flat
+          no-caps
+          :label="t('nav.newRecipe')"
+          icon="add"
+          to="/recipes/new"
+          style="color: var(--color-primary-container)"
+          class="font-label-lg q-mr-sm"
+        />
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn
+          flat
+          round
+          :label="localeStore.current === 'en-US' ? 'DE' : 'EN'"
+          class="font-label-lg"
+          style="color: var(--color-primary-container)"
+          @click="localeStore.toggle()"
+          title="Switch language"
+        />
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
+    <q-page-container style="background-color: var(--color-background)">
       <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import EssentialLink, { type EssentialLinkProps } from 'components/EssentialLink.vue';
+import { useI18n } from 'vue-i18n';
+import { useLocaleStore } from 'src/stores/locale';
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-  },
-];
-
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
+const { t } = useI18n();
+const localeStore = useLocaleStore();
 </script>
