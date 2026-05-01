@@ -84,6 +84,12 @@ func (h *RecipeHandler) List(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		s.Tags = tags
+		emojis, err := h.loadIngredientEmojis(r, s.ID)
+		if err != nil {
+			writeError(w, http.StatusInternalServerError, "load emojis failed")
+			return
+		}
+		s.Emojis = emojis
 		summaries = append(summaries, s)
 	}
 	writeJSON(w, http.StatusOK, summaries)
@@ -274,6 +280,25 @@ func (h *RecipeHandler) loadRecipe(r *http.Request, id int64) (*models.Recipe, e
 	}
 	recipe.Tags = tags
 	return recipe, nil
+}
+
+func (h *RecipeHandler) loadIngredientEmojis(r *http.Request, recipeID int64) ([]string, error) {
+	rows, err := h.db.QueryContext(r.Context(),
+		`SELECT emoji FROM ingredients WHERE recipe_id=? AND emoji != '' ORDER BY position`, recipeID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	emojis := make([]string, 0)
+	for rows.Next() {
+		var emoji string
+		if err := rows.Scan(&emoji); err != nil {
+			return nil, err
+		}
+		emojis = append(emojis, emoji)
+	}
+	return emojis, nil
 }
 
 func (h *RecipeHandler) loadTags(r *http.Request, recipeID int64) ([]models.Tag, error) {

@@ -140,6 +140,7 @@ func (c *LLMClient) parseRecipeFromImage(ctx context.Context, imgBytes []byte, m
     {"name": "tag name"}
   ]
 }
+Use 1-3 tags maximum (aim for 2). Choose broad category tags only (e.g. "vegetarian", "pasta", "dessert").
 Return ONLY the JSON object, no markdown, no explanation.`
 
 	content, err := c.chatComplete(ctx, []map[string]any{

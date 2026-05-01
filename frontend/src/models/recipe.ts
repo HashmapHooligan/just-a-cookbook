@@ -31,4 +31,5 @@ export interface RecipeSummary {
   id: number;
   title: string;
   tags: Tag[];
+  emojis: string[];
 }

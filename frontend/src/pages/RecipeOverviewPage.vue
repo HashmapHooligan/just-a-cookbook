@@ -48,31 +48,9 @@
           :recipe="recipe"
           :index="i"
           @click="router.push(`/recipes/${recipe.id}`)"
-          @delete="confirmDelete(recipe)"
         />
       </div>
     </div>
-
-    <q-dialog v-model="deleteDialog">
-      <q-card style="min-width: 320px; border-radius: 16px;">
-        <q-card-section>
-          <div class="font-headline-md">{{ t('detail.confirmDelete') }}</div>
-          <p class="font-body-md q-mt-sm" style="color: var(--color-on-surface-variant)">
-            {{ t('detail.confirmDeleteMessage') }}
-          </p>
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat :label="t('confirm.no')" v-close-popup class="font-label-lg" />
-          <q-btn
-            unelevated
-            :label="t('confirm.yes')"
-            class="font-label-lg"
-            style="background-color: var(--color-negative); color: white"
-            @click="doDelete"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-page>
 </template>
 
@@ -80,19 +58,14 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { useQuasar } from 'quasar';
 import { useRecipeStore } from 'src/stores/recipes';
-import type { RecipeSummary } from 'src/models/recipe';
 import RecipeCard from 'src/components/RecipeCard.vue';
 
 const { t } = useI18n();
 const router = useRouter();
 const store = useRecipeStore();
-const $q = useQuasar();
 
 const searchQuery = ref('');
-const deleteDialog = ref(false);
-const pendingDelete = ref<RecipeSummary | null>(null);
 
 let searchTimer: ReturnType<typeof setTimeout>;
 
@@ -103,23 +76,6 @@ function onSearch(val: string | number | null) {
   searchTimer = setTimeout(() => {
     void store.loadRecipes(val ? String(val) : undefined);
   }, 300);
-}
-
-function confirmDelete(recipe: RecipeSummary) {
-  pendingDelete.value = recipe;
-  deleteDialog.value = true;
-}
-
-async function doDelete() {
-  if (!pendingDelete.value) return;
-  deleteDialog.value = false;
-  try {
-    await store.removeRecipe(pendingDelete.value.id);
-    $q.notify({ type: 'positive', message: `"${pendingDelete.value.title}" deleted` });
-  } catch {
-    $q.notify({ type: 'negative', message: t('errors.deleteFailed') });
-  }
-  pendingDelete.value = null;
 }
 </script>
 

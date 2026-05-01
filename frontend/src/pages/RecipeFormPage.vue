@@ -74,6 +74,7 @@
             v-model="ing.name"
             class="form-page__input form-page__input--name font-body-md"
             :placeholder="t('form.ingredientName')"
+            @keydown.enter.prevent="addIngredient"
           />
           <input
             v-model.number="ing.amountNumber"
@@ -82,11 +83,13 @@
             step="any"
             class="form-page__input form-page__input--amount font-body-md"
             :placeholder="t('form.ingredientAmount')"
+            @keydown.enter.prevent="addIngredient"
           />
           <input
             v-model="ing.amountUnit"
             class="form-page__input form-page__input--unit font-body-md"
             :placeholder="t('form.ingredientUnit')"
+            @keydown.enter.prevent="addIngredient"
           />
           <q-btn
             flat
@@ -120,6 +123,7 @@
             class="form-page__textarea font-body-md"
             :placeholder="t('form.stepDescription')"
             rows="2"
+            @keydown.enter.exact.prevent="addStep"
           />
           <q-btn
             flat

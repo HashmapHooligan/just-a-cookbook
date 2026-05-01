@@ -32,7 +32,8 @@ type Recipe struct {
 }
 
 type RecipeSummary struct {
-	ID    int64  `json:"id"`
-	Title string `json:"title"`
-	Tags  []Tag  `json:"tags"`
+	ID     int64    `json:"id"`
+	Title  string   `json:"title"`
+	Tags   []Tag    `json:"tags"`
+	Emojis []string `json:"emojis"`
 }
