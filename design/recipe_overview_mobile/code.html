@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kitchen Master - Recipes</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#797580",
+                        "background": "#fff8f3",
+                        "on-secondary-fixed-variant": "#8a1c00",
+                        "tertiary": "#03000a",
+                        "surface-container-high": "#ffe5ba",
+                        "on-secondary-container": "#5e1000",
+                        "inverse-primary": "#cbbeff",
+                        "surface-bright": "#fff8f3",
+                        "secondary-container": "#fd643e",
+                        "on-secondary-fixed": "#3c0700",
+                        "surface-container-highest": "#ffdea6",
+                        "primary-fixed": "#e6deff",
+                        "on-surface": "#271900",
+                        "secondary-fixed": "#ffdad2",
+                        "primary-fixed-dim": "#cbbeff",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#1e104e",
+                        "secondary": "#b12e0a",
+                        "on-primary-container": "#887cbe",
+                        "on-tertiary-fixed": "#27103b",
+                        "surface-container": "#ffebce",
+                        "on-background": "#271900",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#48454f",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#d9bbf1",
+                        "secondary-fixed-dim": "#ffb4a2",
+                        "surface-variant": "#ffdea6",
+                        "surface-tint": "#615594",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#f1dbff",
+                        "tertiary-container": "#28113c",
+                        "surface-container-low": "#fff2e0",
+                        "surface-dim": "#ffd486",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#493e7b",
+                        "primary": "#020013",
+                        "outline-variant": "#c9c4d1",
+                        "on-tertiary-fixed-variant": "#543d6a",
+                        "surface": "#fff8f3",
+                        "on-tertiary-container": "#957aab",
+                        "inverse-on-surface": "#ffefd7",
+                        "inverse-surface": "#412d00",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#1d0f4d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "lg": "48px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "xl": "64px",
+                        "margin": "32px",
+                        "sm": "12px",
+                        "md": "24px"
+                    },
+                    "fontFamily": {
+                        "instruction-step": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-lg": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-sm": ["Be Vietnam Pro"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "instruction-step": ["20px", { "lineHeight": "32px", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md antialiased selection:bg-secondary-container selection:text-white">
+<!-- TopAppBar Component (from JSON) -->
+<header class="fixed top-0 w-full z-50 bg-amber-50 dark:bg-slate-900 border-b-2 border-indigo-900/10 dark:border-amber-50/5 shadow-sm">
+<div class="flex justify-between items-center h-16 px-4 w-full">
+<button class="text-indigo-950 dark:text-amber-50 hover:bg-indigo-900/5 dark:hover:bg-white/5 active:scale-95 transition-all duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-plus-jakarta font-bold text-lg tracking-tight text-xl font-black text-indigo-950 dark:text-amber-50">
+                Kitchen Master
+            </h1>
+<button class="text-indigo-950 dark:text-amber-50 hover:bg-indigo-900/5 dark:hover:bg-white/5 active:scale-95 transition-all duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 pb-32 px-gutter md:max-w-md md:mx-auto flex flex-col gap-md">
+<!-- Persistent Search Bar (Style Guidance specified) -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border-0 border-b-2 border-on-primary-fixed-variant focus:border-secondary-container focus:ring-0 pl-12 pr-4 py-3 rounded-t-lg text-body-lg font-body-lg text-on-surface placeholder:text-outline transition-colors" placeholder="Find a recipe..." type="text"/>
+</div>
+<!-- Recipe Cards List -->
+<div class="flex flex-col gap-sm">
+<!-- Recipe Card 1 -->
+<article class="bg-surface-container-lowest rounded-lg border border-on-primary-fixed-variant/10 p-md flex flex-col gap-base shadow-sm">
+<div class="flex flex-col gap-xs">
+<h2 class="text-headline-md font-headline-md text-primary-container leading-tight">15-Minute Garlic Butter Noodles</h2>
+<p class="text-body-sm font-body-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+                        The Quick Pantry
+                    </p>
+</div>
+<div class="flex flex-wrap gap-xs pt-2">
+<span class="bg-on-primary-fixed-variant text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Quick</span>
+<span class="bg-on-primary-fixed-variant text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Vegetarian</span>
+<span class="bg-on-primary-fixed-variant text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Pasta</span>
+</div>
+</article>
+<!-- Recipe Card 2 -->
+<article class="bg-surface-container-lowest rounded-lg border border-on-primary-fixed-variant/10 p-md flex flex-col gap-base shadow-sm">
+<div class="flex flex-col gap-xs">
+<h2 class="text-headline-md font-headline-md text-primary-container leading-tight">Spicy Miso Ramen</h2>
+<p class="text-body-sm font-body-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">person</span>
+                        Chef Yuji
+                    </p>
+</div>
+<div class="flex flex-wrap gap-xs pt-2">
+<span class="bg-on-primary-fixed-variant text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Spicy</span>
+<span class="bg-on-primary-fixed-variant text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Comfort</span>
+</div>
+</article>
+<!-- Recipe Card 3 -->
+<article class="bg-surface-container-lowest rounded-lg border border-on-primary-fixed-variant/10 p-md flex flex-col gap-base shadow-sm">
+<div class="flex flex-col gap-xs">
+<h2 class="text-headline-md font-headline-md text-primary-container leading-tight">Lemon Herb Roasted Chicken</h2>
+<p class="text-body-sm font-body-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">favorite</span>
+                        Family Classics
+                    </p>
+</div>
+<div class="flex flex-wrap gap-xs pt-2">
+<span class="bg-on-primary-fixed-variant text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">High Protein</span>
+<span class="bg-on-primary-fixed-variant text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Dinner</span>
+<span class="bg-on-primary-fixed-variant text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Oven</span>
+</div>
+</article>
+<!-- Recipe Card 4 -->
+<article class="bg-surface-container-lowest rounded-lg border border-on-primary-fixed-variant/10 p-md flex flex-col gap-base shadow-sm">
+<div class="flex flex-col gap-xs">
+<h2 class="text-headline-md font-headline-md text-primary-container leading-tight">Overnight Oat &amp; Chia Bowl</h2>
+<p class="text-body-sm font-body-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">bookmark</span>
+                        Saved Online
+                    </p>
+</div>
+<div class="flex flex-wrap gap-xs pt-2">
+<span class="bg-on-primary-fixed-variant text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Breakfast</span>
+<span class="bg-on-primary-fixed-variant text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Vegan</span>
+<span class="bg-on-primary-fixed-variant text-on-primary px-3 py-1 rounded-full text-label-md font-label-md">Prep</span>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar Component (from JSON) -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-2xl border-t border-indigo-900/10 bg-white dark:bg-slate-950 shadow-[0_-4px_12px_rgba(30,16,78,0.08)]">
+<div class="flex justify-around items-center h-20 px-6 pb-safe w-full">
+<!-- Active Tab: Recipes -->
+<button class="flex flex-col items-center justify-center bg-orange-600 text-white rounded-2xl px-6 py-2 transition-all font-plus-jakarta font-semibold text-[11px] uppercase tracking-wider active:scale-90 transition-transform">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span>
+                Recipes
+            </button>
+<!-- Inactive Tab: Add -->
+<button class="flex flex-col items-center justify-center text-indigo-900 dark:text-slate-400 px-6 py-2 hover:text-orange-500 font-plus-jakarta font-semibold text-[11px] uppercase tracking-wider active:scale-90 transition-transform">
+<span class="material-symbols-outlined mb-1">add_circle</span>
+                Add
+            </button>
+</div>
+</nav>
+</body></html>

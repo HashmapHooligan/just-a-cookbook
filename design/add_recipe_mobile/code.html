@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add Recipe - Kitchen Master</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "outline": "#797580",
+                      "background": "#fff8f3",
+                      "on-secondary-fixed-variant": "#8a1c00",
+                      "tertiary": "#03000a",
+                      "surface-container-high": "#ffe5ba",
+                      "on-secondary-container": "#5e1000",
+                      "inverse-primary": "#cbbeff",
+                      "surface-bright": "#fff8f3",
+                      "secondary-container": "#fd643e",
+                      "on-secondary-fixed": "#3c0700",
+                      "surface-container-highest": "#ffdea6",
+                      "primary-fixed": "#e6deff",
+                      "on-surface": "#271900",
+                      "secondary-fixed": "#ffdad2",
+                      "primary-fixed-dim": "#cbbeff",
+                      "error-container": "#ffdad6",
+                      "primary-container": "#1e104e",
+                      "secondary": "#b12e0a",
+                      "on-primary-container": "#887cbe",
+                      "on-tertiary-fixed": "#27103b",
+                      "surface-container": "#ffebce",
+                      "on-background": "#271900",
+                      "on-error-container": "#93000a",
+                      "on-surface-variant": "#48454f",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed-dim": "#d9bbf1",
+                      "secondary-fixed-dim": "#ffb4a2",
+                      "surface-variant": "#ffdea6",
+                      "surface-tint": "#615594",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed": "#f1dbff",
+                      "tertiary-container": "#28113c",
+                      "surface-container-low": "#fff2e0",
+                      "surface-dim": "#ffd486",
+                      "on-primary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed-variant": "#493e7b",
+                      "primary": "#020013",
+                      "outline-variant": "#c9c4d1",
+                      "on-tertiary-fixed-variant": "#543d6a",
+                      "surface": "#fff8f3",
+                      "on-tertiary-container": "#957aab",
+                      "inverse-on-surface": "#ffefd7",
+                      "inverse-surface": "#412d00",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed": "#1d0f4d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "lg": "48px",
+                      "base": "8px",
+                      "xs": "4px",
+                      "xl": "64px",
+                      "margin": "32px",
+                      "sm": "12px",
+                      "md": "24px"
+              },
+              "fontFamily": {
+                      "instruction-step": [
+                              "Be Vietnam Pro"
+                      ],
+                      "body-lg": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "Be Vietnam Pro"
+                      ],
+                      "label-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-xl": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-sm": [
+                              "Be Vietnam Pro"
+                      ],
+                      "label-md": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "instruction-step": [
+                              "20px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-xl": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+      </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen text-on-background font-body-md pt-20 pb-28 md:hidden">
+<!-- TopAppBar from JSON -->
+<header class="fixed top-0 w-full z-50 bg-amber-50 dark:bg-slate-900 border-b-2 border-indigo-900/10 dark:border-amber-50/5 shadow-sm flex justify-between items-center h-16 px-4 w-full">
+<button aria-label="Menu" class="active:scale-95 transition-all duration-200 hover:bg-indigo-900/5 dark:hover:bg-white/5 p-2 rounded-full">
+<span class="material-symbols-outlined text-indigo-950 dark:text-amber-50" data-icon="menu">menu</span>
+</button>
+<h1 class="text-xl font-black text-indigo-950 dark:text-amber-50 font-plus-jakarta tracking-tight">Kitchen Master</h1>
+<button aria-label="Search" class="active:scale-95 transition-all duration-200 hover:bg-indigo-900/5 dark:hover:bg-white/5 p-2 rounded-full">
+<span class="material-symbols-outlined text-indigo-950 dark:text-amber-50" data-icon="search">search</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-md flex flex-col gap-lg">
+<!-- Header -->
+<div class="flex flex-col gap-xs pt-base">
+<h2 class="font-headline-lg text-headline-lg text-primary">Add New Recipe</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Import quickly or enter details manually.</p>
+</div>
+<!-- Import Section -->
+<section class="flex flex-col gap-sm">
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-lg flex flex-col items-center justify-center bg-surface-container-lowest text-center cursor-pointer hover:border-secondary transition-colors group">
+<div class="bg-surface-container-low p-sm rounded-full mb-sm group-hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="document_scanner" style="font-variation-settings: 'FILL' 1;">document_scanner</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-xs">Import from Photo/File</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Snap a picture of a cookbook page or upload a PDF.</p>
+</div>
+</section>
+<!-- Divider -->
+<div class="flex items-center gap-sm">
+<div class="h-px bg-outline-variant flex-1"></div>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Manual Entry</span>
+<div class="h-px bg-outline-variant flex-1"></div>
+</div>
+<!-- Form Section -->
+<form class="flex flex-col gap-md">
+<!-- Title -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant" for="recipe-title">Recipe Title</label>
+<input class="w-full bg-surface-container-lowest border-0 border-b-2 border-outline-variant p-sm font-body-lg text-body-lg text-on-surface focus:ring-0 focus:border-secondary transition-colors rounded-t-DEFAULT" id="recipe-title" placeholder="e.g., Grandma's Apple Pie" type="text"/>
+</div>
+<!-- Source & Time Row -->
+<div class="flex gap-md">
+<div class="flex flex-col gap-xs flex-1">
+<label class="font-label-md text-label-md text-on-surface-variant" for="recipe-source">Source</label>
+<input class="w-full bg-surface-container-lowest border-0 border-b-2 border-outline-variant p-sm font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary transition-colors rounded-t-DEFAULT" id="recipe-source" placeholder="Website, Book..." type="text"/>
+</div>
+<div class="flex flex-col gap-xs w-1/3">
+<label class="font-label-md text-label-md text-on-surface-variant" for="recipe-time">Total Time</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border-0 border-b-2 border-outline-variant p-sm font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary transition-colors rounded-t-DEFAULT" id="recipe-time" placeholder="45 min" type="text"/>
+<span class="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 text-outline-variant pointer-events-none" data-icon="timer">timer</span>
+</div>
+</div>
+</div>
+<!-- Ingredients -->
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between items-end">
+<label class="font-label-md text-label-md text-on-surface-variant" for="recipe-ingredients">Ingredients</label>
+<span class="font-body-sm text-body-sm text-outline">One per line</span>
+</div>
+<textarea class="w-full bg-surface-container-lowest border-0 border-b-2 border-outline-variant p-sm font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary transition-colors rounded-t-DEFAULT resize-none" id="recipe-ingredients" placeholder="2 cups flour
+1 tsp salt
+..." rows="5"></textarea>
+</div>
+<!-- Instructions -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant" for="recipe-instructions">Instructions</label>
+<textarea class="w-full bg-surface-container-lowest border-0 border-b-2 border-outline-variant p-sm font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary transition-colors rounded-t-DEFAULT resize-none" id="recipe-instructions" placeholder="1. Preheat oven to 350°F...
+2. Mix dry ingredients..." rows="6"></textarea>
+</div>
+<!-- Tags -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant" for="recipe-tags">Tags</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border-0 border-b-2 border-outline-variant p-sm font-body-md text-body-md text-on-surface focus:ring-0 focus:border-secondary transition-colors rounded-t-DEFAULT" id="recipe-tags" placeholder="Add tags (e.g., Vegan, Dinner)" type="text"/>
+<button class="absolute right-sm top-1/2 -translate-y-1/2 text-secondary font-label-md text-label-md uppercase tracking-wider" type="button">Add</button>
+</div>
+<div class="flex flex-wrap gap-xs mt-xs">
+<!-- Example Tags -->
+<div class="bg-tertiary-container text-on-tertiary-container rounded-full px-sm py-xs flex items-center gap-xs">
+<span class="font-label-md text-label-md">Dessert</span>
+<span class="material-symbols-outlined text-[16px] cursor-pointer" data-icon="close">close</span>
+</div>
+<div class="bg-tertiary-container text-on-tertiary-container rounded-full px-sm py-xs flex items-center gap-xs">
+<span class="font-label-md text-label-md">Baking</span>
+<span class="material-symbols-outlined text-[16px] cursor-pointer" data-icon="close">close</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex gap-sm mt-md pt-md border-t border-outline-variant/30">
+<button class="flex-1 py-sm px-md border-2 border-primary-container text-primary-container rounded-lg font-label-lg text-label-lg hover:-translate-y-0.5 transition-transform" type="button">
+                    Cancel
+                </button>
+<button class="flex-1 py-sm px-md bg-secondary text-on-secondary rounded-lg font-label-lg text-label-lg shadow-sm hover:-translate-y-0.5 transition-transform flex items-center justify-center gap-xs" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="save">save</span>
+                    Save Recipe
+                </button>
+</div>
+</form>
+</main>
+<!-- BottomNavBar from JSON -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-2xl border-t border-indigo-900/10 shadow-[0_-4px_12px_rgba(30,16,78,0.08)] bg-white dark:bg-slate-950 flex justify-around items-center h-20 px-6 pb-safe w-full">
+<!-- Inactive: Recipes -->
+<a class="flex flex-col items-center justify-center text-indigo-900 dark:text-slate-400 px-6 py-2 hover:text-orange-500 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="font-plus-jakarta font-semibold text-[11px] uppercase tracking-wider">Recipes</span>
+</a>
+<!-- Active: Add -->
+<a class="flex flex-col items-center justify-center bg-orange-600 text-white rounded-2xl px-6 py-2 transition-all active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="add_circle" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-plus-jakarta font-semibold text-[11px] uppercase tracking-wider">Add</span>
+</a>
+</nav>
+</body></html>
