@@ -20,11 +20,7 @@
         </div>
       </div>
 
-      <div v-if="store.loading" class="overview-page__loading">
-        <q-spinner-dots size="48px" color="secondary" />
-      </div>
-
-      <div v-else-if="store.recipes.length === 0" class="overview-page__empty">
+      <div v-if="store.recipes.length === 0 && !store.loading" class="overview-page__empty">
         <p class="font-body-lg" style="color: var(--color-on-surface-variant)">
           {{ t('overview.noResults') }}
         </p>
@@ -41,7 +37,7 @@
         />
       </div>
 
-      <div v-else class="overview-page__grid">
+      <div v-if="store.recipes.length > 0" class="overview-page__grid">
         <RecipeCard
           v-for="(recipe, i) in store.recipes"
           :key="recipe.id"
@@ -67,15 +63,10 @@ const store = useRecipeStore();
 
 const searchQuery = ref('');
 
-let searchTimer: ReturnType<typeof setTimeout>;
-
 onMounted(() => store.loadRecipes());
 
 function onSearch(val: string | number | null) {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => {
-    void store.loadRecipes(val ? String(val) : undefined);
-  }, 300);
+  void store.loadRecipes(val ? String(val) : undefined);
 }
 </script>
 
