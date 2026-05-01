@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/go-chi/chi/v5"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
@@ -25,9 +24,6 @@ func main() {
 	llmKey := getenv("LLM_API_KEY", "")
 	llmModel := getenv("LLM_MODEL", "gpt-4o")
 	addr := getenv("ADDR", ":8080")
-	originsRaw := getenv("ALLOWED_ORIGINS", "http://localhost:9000")
-
-	allowedOrigins := splitTrim(originsRaw)
 
 	database, err := db.Open(dbPath)
 	if err != nil {
@@ -42,7 +38,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(chiMiddleware.Logger)
 	r.Use(chiMiddleware.Recoverer)
-	r.Use(middleware.CORS(allowedOrigins))
+	r.Use(middleware.CORS())
 
 	r.Route("/api/recipes", func(r chi.Router) {
 		r.Get("/", recipeHandler.List)
@@ -55,7 +51,7 @@ func main() {
 		})
 	})
 
-	log.Printf("listening on %s (allowed origins: %v)", addr, allowedOrigins)
+	log.Printf("listening on %s", addr)
 	if err := http.ListenAndServe(addr, r); err != nil {
 		log.Fatalf("listen: %v", err)
 	}
@@ -66,15 +62,4 @@ func getenv(key, fallback string) string {
 		return v
 	}
 	return fallback
-}
-
-func splitTrim(s string) []string {
-	parts := strings.Split(s, ",")
-	out := make([]string, 0, len(parts))
-	for _, p := range parts {
-		if t := strings.TrimSpace(p); t != "" {
-			out = append(out, t)
-		}
-	}
-	return out
 }
