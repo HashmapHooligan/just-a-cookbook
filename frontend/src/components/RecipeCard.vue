@@ -1,5 +1,5 @@
 <template>
-  <div class="recipe-card" :style="cardStyle" @click="emit('click')">
+  <div class="recipe-card" @click="emit('click')">
     <div class="recipe-card__body">
       <div class="recipe-card__tags q-mb-sm">
         <TagChip v-for="tag in recipe.tags" :key="tag.name" :tag="tag" />
@@ -13,24 +13,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import type { RecipeSummary } from 'src/models/recipe';
 import TagChip from 'src/components/TagChip.vue';
 
-const CARD_THEMES = [
-  { bg: 'var(--color-surface-container-low)', color: 'var(--color-on-surface)' },
-  { bg: 'var(--color-surface-container)', color: 'var(--color-on-surface)' },
-  { bg: 'var(--color-surface-container-highest)', color: 'var(--color-on-surface)' },
-];
-
-const props = defineProps<{ recipe: RecipeSummary; index: number }>();
+defineProps<{ recipe: RecipeSummary; index: number }>();
 const emit = defineEmits<{ click: [] }>();
-
-const theme = computed(() => CARD_THEMES[props.index % CARD_THEMES.length]!);
-const cardStyle = computed(() => ({
-  backgroundColor: theme.value.bg,
-  color: theme.value.color,
-}));
 </script>
 
 <style scoped>
@@ -40,6 +27,8 @@ const cardStyle = computed(() => ({
   padding: 24px;
   overflow: hidden;
   cursor: pointer;
+  background-color: var(--color-surface-container);
+  color: var(--color-on-surface);
 }
 
 .recipe-card__body {
