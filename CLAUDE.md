@@ -4,6 +4,8 @@ This project is called "Just a Cookbook", since it shall be exactly that: just a
 - no ads, 
 - no walls of text explaining me the history of a recipe
 
+This project is part of a series of applications under the brand of "Just a", that just do what they should.
+
 # Planned features
 - Recipe overview with fulltext search and option to delete recipe
 - Recipe display with option to edit recipe
