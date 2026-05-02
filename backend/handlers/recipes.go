@@ -219,7 +219,23 @@ func (h *RecipeHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := h.db.ExecContext(r.Context(), `DELETE FROM recipes WHERE id=?`, id)
+	tx, err := h.db.BeginTx(r.Context(), nil)
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "tx failed")
+		return
+	}
+	defer tx.Rollback()
+
+	if _, err := tx.ExecContext(r.Context(), `DELETE FROM ingredients WHERE recipe_id=?`, id); err != nil {
+		writeError(w, http.StatusInternalServerError, "delete ingredients failed")
+		return
+	}
+	if _, err := tx.ExecContext(r.Context(), `DELETE FROM steps WHERE recipe_id=?`, id); err != nil {
+		writeError(w, http.StatusInternalServerError, "delete steps failed")
+		return
+	}
+
+	res, err := tx.ExecContext(r.Context(), `DELETE FROM recipes WHERE id=?`, id)
 	if err != nil {
 		writeError(w, http.StatusInternalServerError, "delete failed")
 		return
@@ -227,6 +243,11 @@ func (h *RecipeHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	n, _ := res.RowsAffected()
 	if n == 0 {
 		writeError(w, http.StatusNotFound, "recipe not found")
+		return
+	}
+
+	if err := tx.Commit(); err != nil {
+		writeError(w, http.StatusInternalServerError, "commit failed")
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
