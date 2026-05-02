@@ -79,9 +79,9 @@
           <q-btn flat :label="t('confirm.no')" v-close-popup class="font-label-lg" />
           <q-btn
             unelevated
+            color="negative"
             :label="t('confirm.yes')"
             class="font-label-lg"
-            style="background-color: var(--color-negative); color: white"
             @click="doDelete"
           />
         </q-card-actions>
