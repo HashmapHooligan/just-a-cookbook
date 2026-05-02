@@ -22,6 +22,7 @@ export const useRecipeStore = defineStore('recipes', () => {
   }
 
   async function loadRecipe(id: number) {
+    currentRecipe.value = null;
     loading.value = true;
     error.value = null;
     try {
