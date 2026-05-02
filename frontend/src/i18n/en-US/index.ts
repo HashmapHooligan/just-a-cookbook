@@ -2,6 +2,7 @@ export default {
   nav: {
     recipes: 'Recipes',
     newRecipe: 'New Recipe',
+    bulkAdd: 'Bulk Add',
   },
   overview: {
     title: 'My Recipes',
@@ -44,6 +45,14 @@ export default {
     addIngredient: 'Add ingredient',
     addStep: 'Add step',
     stepDescription: 'Step description',
+  },
+  bulkAdd: {
+    title: 'Bulk Add',
+    hint: 'Drop images here or click to select multiple',
+    importButton: 'Import All',
+    success: '{n} recipe(s) added.',
+    partial: '{success} of {total} recipes added ({failed} failed).',
+    allFailed: 'All imports failed.',
   },
   errors: {
     loadFailed: 'Could not load recipes.',

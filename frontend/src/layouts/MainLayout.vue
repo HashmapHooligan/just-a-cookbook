@@ -8,15 +8,25 @@
           </router-link>
         </q-toolbar-title>
 
-        <q-btn
+        <q-btn-dropdown
           flat
           no-caps
+          split
           :label="t('nav.newRecipe')"
           icon="add"
           to="/recipes/new"
           style="color: var(--color-on-header)"
           class="font-label-lg q-mr-sm"
-        />
+        >
+          <q-list>
+            <q-item clickable v-close-popup to="/recipes/bulk-add">
+              <q-item-section avatar>
+                <q-icon name="photo_library" />
+              </q-item-section>
+              <q-item-section>{{ t('nav.bulkAdd') }}</q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
 
         <q-btn
           flat

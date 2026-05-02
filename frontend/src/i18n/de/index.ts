@@ -2,6 +2,7 @@ export default {
   nav: {
     recipes: 'Rezepte',
     newRecipe: 'Neues Rezept',
+    bulkAdd: 'Massenimport',
   },
   overview: {
     title: 'Mein Kochbuch',
@@ -44,6 +45,14 @@ export default {
     addIngredient: 'Zutat hinzufügen',
     addStep: 'Schritt hinzufügen',
     stepDescription: 'Schrittbeschreibung',
+  },
+  bulkAdd: {
+    title: 'Massenimport',
+    hint: 'Bilder hier ablegen oder klicken zum Auswählen',
+    importButton: 'Alle importieren',
+    success: '{n} Rezept(e) hinzugefügt.',
+    partial: '{success} von {total} Rezepten hinzugefügt ({failed} fehlgeschlagen).',
+    allFailed: 'Alle Importe fehlgeschlagen.',
   },
   errors: {
     loadFailed: 'Rezepte konnten nicht geladen werden.',
