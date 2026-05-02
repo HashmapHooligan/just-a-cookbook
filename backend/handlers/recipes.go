@@ -63,11 +63,11 @@ func (h *RecipeHandler) List(w http.ResponseWriter, r *http.Request) {
 				JOIN tags t ON t.id = rt.tag_id
 				WHERE t.name LIKE '%' || ? || '%'
 			)
-			ORDER BY r.created_at DESC
+			ORDER BY r.title ASC
 		`, ftsPrefix(query), query)
 	} else {
 		rows, err = h.db.QueryContext(r.Context(), `
-			SELECT id, title FROM recipes ORDER BY created_at DESC
+			SELECT id, title FROM recipes ORDER BY title ASC
 		`)
 	}
 	if err != nil {
