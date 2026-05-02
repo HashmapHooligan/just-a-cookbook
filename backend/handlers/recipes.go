@@ -56,10 +56,15 @@ func (h *RecipeHandler) List(w http.ResponseWriter, r *http.Request) {
 		rows, err = h.db.QueryContext(r.Context(), `
 			SELECT r.id, r.title
 			FROM recipes r
-			JOIN recipes_fts fts ON fts.rowid = r.id
-			WHERE recipes_fts MATCH ?
-			ORDER BY rank
-		`, ftsPrefix(query))
+			WHERE r.id IN (
+				SELECT rowid FROM recipes_fts WHERE recipes_fts MATCH ?
+				UNION
+				SELECT rt.recipe_id FROM recipe_tags rt
+				JOIN tags t ON t.id = rt.tag_id
+				WHERE t.name LIKE '%' || ? || '%'
+			)
+			ORDER BY r.created_at DESC
+		`, ftsPrefix(query), query)
 	} else {
 		rows, err = h.db.QueryContext(r.Context(), `
 			SELECT id, title FROM recipes ORDER BY created_at DESC
