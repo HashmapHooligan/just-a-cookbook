@@ -4,7 +4,7 @@ export default {
     newRecipe: 'New Recipe',
   },
   overview: {
-    title: 'My Cookbook',
+    title: 'My Recipes',
     searchPlaceholder: 'Search recipes...',
     noResults: 'No recipes found.',
     noResultsHint: 'Add your first recipe!',
