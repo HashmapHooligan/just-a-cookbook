@@ -12,7 +12,7 @@ func isAllowedOrigin(origin string) bool {
 		return false
 	}
 	host := u.Hostname()
-	return host == "localhost" || strings.HasPrefix(host, "192.168.")
+	return host == "localhost" || host == "zu.hause" || strings.HasPrefix(host, "192.168.")
 }
 
 func CORS() func(http.Handler) http.Handler {
