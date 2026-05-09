@@ -26,11 +26,11 @@ func setupTestServer(t *testing.T) *httptest.Server {
 	h := handlers.NewRecipeHandler(database)
 
 	r := chi.NewRouter()
-	r.Get("/api/recipes", h.List)
-	r.Post("/api/recipes", h.Create)
-	r.Get("/api/recipes/{id}", h.Get)
-	r.Put("/api/recipes/{id}", h.Update)
-	r.Delete("/api/recipes/{id}", h.Delete)
+	r.Get("/kochbuch/api/recipes", h.List)
+	r.Post("/kochbuch/api/recipes", h.Create)
+	r.Get("/kochbuch/api/recipes/{id}", h.Get)
+	r.Put("/kochbuch/api/recipes/{id}", h.Update)
+	r.Delete("/kochbuch/api/recipes/{id}", h.Delete)
 
 	return httptest.NewServer(r)
 }
@@ -79,7 +79,7 @@ func TestList_Empty(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	resp, err := http.Get(server.URL + "/api/recipes")
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -96,10 +96,10 @@ func TestList_WithData(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	postJSON(t, server, "/api/recipes", sampleRecipe())
-	postJSON(t, server, "/api/recipes", models.Recipe{Title: "Pizza", Tags: []models.Tag{}})
+	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe())
+	postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "Pizza", Tags: []models.Tag{}})
 
-	resp, err := http.Get(server.URL + "/api/recipes")
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -113,10 +113,10 @@ func TestList_Search(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	postJSON(t, server, "/api/recipes", sampleRecipe())
-	postJSON(t, server, "/api/recipes", models.Recipe{Title: "Pizza Margherita"})
+	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe())
+	postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "Pizza Margherita"})
 
-	resp, err := http.Get(server.URL + "/api/recipes?q=pasta")
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=pasta")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -133,9 +133,9 @@ func TestList_Search_NoMatch(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	postJSON(t, server, "/api/recipes", sampleRecipe())
+	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe())
 
-	resp, err := http.Get(server.URL + "/api/recipes?q=sushi")
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=sushi")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -151,7 +151,7 @@ func TestCreate_Valid(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	resp := postJSON(t, server, "/api/recipes", sampleRecipe())
+	resp := postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe())
 	if resp.StatusCode != http.StatusCreated {
 		t.Fatalf("expected 201, got %d", resp.StatusCode)
 	}
@@ -177,7 +177,7 @@ func TestCreate_MissingTitle(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	resp := postJSON(t, server, "/api/recipes", models.Recipe{Source: "test"})
+	resp := postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Source: "test"})
 	if resp.StatusCode != http.StatusBadRequest {
 		t.Fatalf("expected 400, got %d", resp.StatusCode)
 	}
@@ -187,7 +187,7 @@ func TestCreate_InvalidJSON(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	resp, err := http.Post(server.URL+"/api/recipes", "application/json", bytes.NewBufferString("not json"))
+	resp, err := http.Post(server.URL+"/kochbuch/api/recipes", "application/json", bytes.NewBufferString("not json"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -200,8 +200,8 @@ func TestCreate_SharedTags(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	postJSON(t, server, "/api/recipes", models.Recipe{Title: "A", Tags: []models.Tag{{Name: "Italian"}}})
-	resp := postJSON(t, server, "/api/recipes", models.Recipe{Title: "B", Tags: []models.Tag{{Name: "Italian"}}})
+	postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "A", Tags: []models.Tag{{Name: "Italian"}}})
+	resp := postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "B", Tags: []models.Tag{{Name: "Italian"}}})
 	if resp.StatusCode != http.StatusCreated {
 		t.Fatalf("expected 201, got %d", resp.StatusCode)
 	}
@@ -213,9 +213,9 @@ func TestGet_Found(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	created := decode[models.Recipe](t, postJSON(t, server, "/api/recipes", sampleRecipe()))
+	created := decode[models.Recipe](t, postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe()))
 
-	resp, err := http.Get(server.URL + "/api/recipes/" + itoa(created.ID))
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes/" + itoa(created.ID))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -232,7 +232,7 @@ func TestGet_NotFound(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	resp, err := http.Get(server.URL + "/api/recipes/99999")
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes/99999")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -245,7 +245,7 @@ func TestGet_InvalidID(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	resp, err := http.Get(server.URL + "/api/recipes/notanid")
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes/notanid")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -260,7 +260,7 @@ func TestUpdate_Valid(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	created := decode[models.Recipe](t, postJSON(t, server, "/api/recipes", sampleRecipe()))
+	created := decode[models.Recipe](t, postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe()))
 
 	updated := created
 	updated.Title = "Pasta Amatriciana"
@@ -269,7 +269,7 @@ func TestUpdate_Valid(t *testing.T) {
 	updated.Tags = []models.Tag{{Name: "Roman"}}
 
 	req, _ := http.NewRequest(http.MethodPut,
-		server.URL+"/api/recipes/"+itoa(created.ID),
+		server.URL+"/kochbuch/api/recipes/"+itoa(created.ID),
 		jsonBody(updated))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := http.DefaultClient.Do(req)
@@ -293,7 +293,7 @@ func TestUpdate_NotFound(t *testing.T) {
 	defer server.Close()
 
 	req, _ := http.NewRequest(http.MethodPut,
-		server.URL+"/api/recipes/99999",
+		server.URL+"/kochbuch/api/recipes/99999",
 		jsonBody(models.Recipe{Title: "Test"}))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := http.DefaultClient.Do(req)
@@ -311,10 +311,10 @@ func TestDelete_Found(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	created := decode[models.Recipe](t, postJSON(t, server, "/api/recipes", sampleRecipe()))
+	created := decode[models.Recipe](t, postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe()))
 
 	req, _ := http.NewRequest(http.MethodDelete,
-		server.URL+"/api/recipes/"+itoa(created.ID), nil)
+		server.URL+"/kochbuch/api/recipes/"+itoa(created.ID), nil)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Fatal(err)
@@ -323,7 +323,7 @@ func TestDelete_Found(t *testing.T) {
 		t.Fatalf("expected 204, got %d", resp.StatusCode)
 	}
 
-	getResp, _ := http.Get(server.URL + "/api/recipes/" + itoa(created.ID))
+	getResp, _ := http.Get(server.URL + "/kochbuch/api/recipes/" + itoa(created.ID))
 	if getResp.StatusCode != http.StatusNotFound {
 		t.Fatalf("expected 404 after delete, got %d", getResp.StatusCode)
 	}
@@ -333,7 +333,7 @@ func TestDelete_NotFound(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	req, _ := http.NewRequest(http.MethodDelete, server.URL+"/api/recipes/99999", nil)
+	req, _ := http.NewRequest(http.MethodDelete, server.URL+"/kochbuch/api/recipes/99999", nil)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Fatal(err)
@@ -347,14 +347,14 @@ func TestDelete_CascadesRelations(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
 
-	created := decode[models.Recipe](t, postJSON(t, server, "/api/recipes", sampleRecipe()))
+	created := decode[models.Recipe](t, postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe()))
 
 	req, _ := http.NewRequest(http.MethodDelete,
-		server.URL+"/api/recipes/"+itoa(created.ID), nil)
+		server.URL+"/kochbuch/api/recipes/"+itoa(created.ID), nil)
 	http.DefaultClient.Do(req)
 
 	// After delete, list should be empty
-	resp, _ := http.Get(server.URL + "/api/recipes")
+	resp, _ := http.Get(server.URL + "/kochbuch/api/recipes")
 	results := decode[[]models.RecipeSummary](t, resp)
 	if len(results) != 0 {
 		t.Fatalf("expected empty list after delete, got %d", len(results))

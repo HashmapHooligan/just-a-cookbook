@@ -40,7 +40,7 @@ func main() {
 	r.Use(chiMiddleware.Recoverer)
 	r.Use(middleware.CORS())
 
-	r.Route("/api/recipes", func(r chi.Router) {
+	r.Route("/kochbuch/api/recipes", func(r chi.Router) {
 		r.Get("/", recipeHandler.List)
 		r.Post("/", recipeHandler.Create)
 		r.Post("/import", importHandler.Import)

@@ -51,7 +51,7 @@ export default defineConfig((ctx) => {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-      // publicPath: '/',
+      publicPath: '/kochbuch/',
       // analyze: true,
       // env: {},
       // rawDefine: {}
@@ -99,7 +99,7 @@ export default defineConfig((ctx) => {
       open: true,
       allowedHosts: ['zu.hause'],
       proxy: {
-        '/api': {
+        '/kochbuch/api': {
           target: 'http://localhost:8080',
           changeOrigin: true,
         },

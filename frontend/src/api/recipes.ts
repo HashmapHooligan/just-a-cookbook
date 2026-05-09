@@ -1,6 +1,6 @@
 import type { Recipe, RecipeSummary } from 'src/models/recipe';
 
-const BASE = '/api/recipes';
+const BASE = '/kochbuch/api/recipes';
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
   const resp = await fetch(url, options);
