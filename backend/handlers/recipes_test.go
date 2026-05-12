@@ -262,6 +262,26 @@ func TestCreate_SharedTags(t *testing.T) {
 	}
 }
 
+func TestCreate_EmptyNestedArrays(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	resp := postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "Minimal"})
+	if resp.StatusCode != http.StatusCreated {
+		t.Fatalf("expected 201, got %d", resp.StatusCode)
+	}
+	got := decode[models.Recipe](t, resp)
+	if len(got.Ingredients) != 0 {
+		t.Fatalf("expected 0 ingredients, got %d", len(got.Ingredients))
+	}
+	if len(got.Steps) != 0 {
+		t.Fatalf("expected 0 steps, got %d", len(got.Steps))
+	}
+	if len(got.Tags) != 0 {
+		t.Fatalf("expected 0 tags, got %d", len(got.Tags))
+	}
+}
+
 // --- Get ---
 
 func TestGet_Found(t *testing.T) {
@@ -340,6 +360,72 @@ func TestUpdate_Valid(t *testing.T) {
 	}
 	if len(got.Ingredients) != 1 {
 		t.Fatalf("expected 1 ingredient, got %d", len(got.Ingredients))
+	}
+}
+
+func TestUpdate_ClearsAllRelations(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	created := decode[models.Recipe](t, postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe()))
+
+	bare := models.Recipe{
+		Title:       "Stripped",
+		Ingredients: []models.Ingredient{},
+		Steps:       []models.Step{},
+		Tags:        []models.Tag{},
+	}
+	req, _ := http.NewRequest(http.MethodPut,
+		server.URL+"/kochbuch/api/recipes/"+itoa(created.ID),
+		jsonBody(bare))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("expected 200, got %d", resp.StatusCode)
+	}
+	got := decode[models.Recipe](t, resp)
+	if len(got.Ingredients) != 0 {
+		t.Fatalf("expected 0 ingredients after clear, got %d", len(got.Ingredients))
+	}
+	if len(got.Steps) != 0 {
+		t.Fatalf("expected 0 steps after clear, got %d", len(got.Steps))
+	}
+	if len(got.Tags) != 0 {
+		t.Fatalf("expected 0 tags after clear, got %d", len(got.Tags))
+	}
+}
+
+func TestUpdate_AddsRelationsToEmpty(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	created := decode[models.Recipe](t, postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "Minimal"}))
+
+	full := sampleRecipe()
+	full.Title = "Minimal"
+	req, _ := http.NewRequest(http.MethodPut,
+		server.URL+"/kochbuch/api/recipes/"+itoa(created.ID),
+		jsonBody(full))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("expected 200, got %d", resp.StatusCode)
+	}
+	got := decode[models.Recipe](t, resp)
+	if len(got.Ingredients) != 2 {
+		t.Fatalf("expected 2 ingredients, got %d", len(got.Ingredients))
+	}
+	if len(got.Steps) != 2 {
+		t.Fatalf("expected 2 steps, got %d", len(got.Steps))
+	}
+	if len(got.Tags) != 2 {
+		t.Fatalf("expected 2 tags, got %d", len(got.Tags))
 	}
 }
 
