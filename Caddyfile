@@ -1,0 +1,12 @@
+zu.hause {
+    tls internal
+
+    handle /kochbuch/api/* {
+        reverse_proxy localhost:8080
+    }
+
+    handle /kochbuch* {
+        root * /home/steffen/www
+        file_server
+    }
+}
