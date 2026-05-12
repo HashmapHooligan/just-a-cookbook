@@ -8,8 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/go-chi/chi/v5"
 	"justacookbook/models"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type RecipeHandler struct {
@@ -17,8 +18,12 @@ type RecipeHandler struct {
 	llm *LLMClient
 }
 
-func NewRecipeHandler(db *sql.DB, llm *LLMClient) *RecipeHandler {
-	return &RecipeHandler{db: db, llm: llm}
+func NewRecipeHandler(db *sql.DB, llm ...*LLMClient) *RecipeHandler {
+	h := &RecipeHandler{db: db}
+	if len(llm) > 0 {
+		h.llm = llm[0]
+	}
+	return h
 }
 
 func (h *RecipeHandler) fillEmojis(r *http.Request, recipe *models.Recipe) {
@@ -74,30 +79,33 @@ func (h *RecipeHandler) List(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, "query failed")
 		return
 	}
-	defer rows.Close()
-
-	summaries := make([]models.RecipeSummary, 0)
+	var recipeSummaries []models.RecipeSummary
 	for rows.Next() {
 		var s models.RecipeSummary
 		if err := rows.Scan(&s.ID, &s.Title); err != nil {
+			rows.Close()
 			writeError(w, http.StatusInternalServerError, "scan failed")
 			return
 		}
-		tags, err := h.loadTags(r, s.ID)
+		recipeSummaries = append(recipeSummaries, s)
+	}
+	rows.Close()
+
+	for i := range recipeSummaries {
+		tags, err := h.loadTags(r, recipeSummaries[i].ID)
 		if err != nil {
 			writeError(w, http.StatusInternalServerError, "load tags failed")
 			return
 		}
-		s.Tags = tags
-		emojis, err := h.loadIngredientEmojis(r, s.ID)
+		recipeSummaries[i].Tags = tags
+		emojis, err := h.loadIngredientEmojis(r, recipeSummaries[i].ID)
 		if err != nil {
 			writeError(w, http.StatusInternalServerError, "load emojis failed")
 			return
 		}
-		s.Emojis = emojis
-		summaries = append(summaries, s)
+		recipeSummaries[i].Emojis = emojis
 	}
-	writeJSON(w, http.StatusOK, summaries)
+	writeJSON(w, http.StatusOK, recipeSummaries)
 }
 
 func (h *RecipeHandler) Get(w http.ResponseWriter, r *http.Request) {
