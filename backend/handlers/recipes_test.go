@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/go-chi/chi/v5"
@@ -126,6 +127,60 @@ func TestList_Search(t *testing.T) {
 	}
 	if results[0].Title != "Pasta Carbonara" {
 		t.Fatalf("expected Pasta Carbonara, got %s", results[0].Title)
+	}
+}
+
+func TestList_Search_FTSOperators(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe())
+
+	// FTS5 boolean operators must be treated as literals, not syntax — must not return 500.
+	operators := []string{"OR", "AND", "NEAR", "NOT", "*", "pasta OR pizza", "pasta AND pizza"}
+	for _, q := range operators {
+		resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=" + url.QueryEscape(q))
+		if err != nil {
+			t.Fatalf("GET q=%q: %v", q, err)
+		}
+		resp.Body.Close()
+		if resp.StatusCode == http.StatusInternalServerError {
+			t.Fatalf("q=%q returned 500", q)
+		}
+	}
+}
+
+func TestList_Search_QuoteInQuery(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: `Chef's "Special" Pasta`})
+
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=" + url.QueryEscape(`"Special"`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	resp.Body.Close()
+	if resp.StatusCode == http.StatusInternalServerError {
+		t.Fatalf("search with double-quote returned 500")
+	}
+}
+
+func TestList_Search_EmptyQueryParam(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe())
+	postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "Pizza"})
+
+	// ?q= (empty value) must return all recipes, not trigger FTS path.
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=")
+	if err != nil {
+		t.Fatal(err)
+	}
+	results := decode[[]models.RecipeSummary](t, resp)
+	if len(results) != 2 {
+		t.Fatalf("expected 2 with empty q, got %d", len(results))
 	}
 }
 
