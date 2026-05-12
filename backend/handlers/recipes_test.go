@@ -343,6 +343,61 @@ func TestUpdate_Valid(t *testing.T) {
 	}
 }
 
+func TestUpdate_InvalidJSON(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	created := decode[models.Recipe](t, postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe()))
+
+	req, _ := http.NewRequest(http.MethodPut,
+		server.URL+"/kochbuch/api/recipes/"+itoa(created.ID),
+		bytes.NewBufferString("not json"))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.StatusCode != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", resp.StatusCode)
+	}
+}
+
+func TestUpdate_MissingTitle(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	created := decode[models.Recipe](t, postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe()))
+
+	req, _ := http.NewRequest(http.MethodPut,
+		server.URL+"/kochbuch/api/recipes/"+itoa(created.ID),
+		jsonBody(models.Recipe{Source: "test"}))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.StatusCode != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", resp.StatusCode)
+	}
+}
+
+func TestUpdate_InvalidID(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	req, _ := http.NewRequest(http.MethodPut,
+		server.URL+"/kochbuch/api/recipes/notanid",
+		jsonBody(models.Recipe{Title: "Test"}))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.StatusCode != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", resp.StatusCode)
+	}
+}
+
 func TestUpdate_NotFound(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
