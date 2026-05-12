@@ -439,6 +439,30 @@ func TestDelete_Found(t *testing.T) {
 	}
 }
 
+func TestDelete_AlreadyDeleted(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	created := decode[models.Recipe](t, postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe()))
+
+	del := func() *http.Response {
+		req, _ := http.NewRequest(http.MethodDelete,
+			server.URL+"/kochbuch/api/recipes/"+itoa(created.ID), nil)
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return resp
+	}
+
+	if resp := del(); resp.StatusCode != http.StatusNoContent {
+		t.Fatalf("first delete: expected 204, got %d", resp.StatusCode)
+	}
+	if resp := del(); resp.StatusCode != http.StatusNotFound {
+		t.Fatalf("second delete: expected 404, got %d", resp.StatusCode)
+	}
+}
+
 func TestDelete_NotFound(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
