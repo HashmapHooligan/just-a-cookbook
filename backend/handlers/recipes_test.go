@@ -581,7 +581,94 @@ func TestDelete_CascadesRelations(t *testing.T) {
 	}
 }
 
-// helpers
+// --- LLM / emoji ---
+
+func TestCreate_FillsEmojisViaLLM(t *testing.T) {
+	llmSrv := mockLLMSuccess(t, `["🍝","🥚"]`)
+	server := setupTestServerWithLLM(t, llmSrv.URL)
+	defer server.Close()
+
+	recipe := models.Recipe{
+		Title: "Pasta",
+		Ingredients: []models.Ingredient{
+			{Name: "Spaghetti"},
+			{Name: "Eggs"},
+		},
+	}
+	resp := postJSON(t, server, "/kochbuch/api/recipes", recipe)
+	if resp.StatusCode != http.StatusCreated {
+		t.Fatalf("expected 201, got %d", resp.StatusCode)
+	}
+	got := decode[models.Recipe](t, resp)
+	for _, ing := range got.Ingredients {
+		if ing.Emoji == "" {
+			t.Fatalf("ingredient %q missing emoji after LLM inference", ing.Name)
+		}
+	}
+}
+
+func TestCreate_LLMEmojiFailureIsGraceful(t *testing.T) {
+	llmSrv := mockLLMError(t, http.StatusServiceUnavailable)
+	server := setupTestServerWithLLM(t, llmSrv.URL)
+	defer server.Close()
+
+	// LLM failure must not abort the create — recipe saved without emojis.
+	resp := postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{
+		Title:       "Pasta",
+		Ingredients: []models.Ingredient{{Name: "Spaghetti"}},
+	})
+	if resp.StatusCode != http.StatusCreated {
+		t.Fatalf("expected 201 even when LLM fails, got %d", resp.StatusCode)
+	}
+}
+
+// --- helpers ---
+
+func mockLLMSuccess(t *testing.T, content string) *httptest.Server {
+	t.Helper()
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]any{
+			"choices": []map[string]any{
+				{"message": map[string]any{"content": content}},
+			},
+		})
+	}))
+	t.Cleanup(srv.Close)
+	return srv
+}
+
+func mockLLMError(t *testing.T, status int) *httptest.Server {
+	t.Helper()
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "LLM unavailable", status)
+	}))
+	t.Cleanup(srv.Close)
+	return srv
+}
+
+func setupTestServerWithLLM(t *testing.T, llmURL string) *httptest.Server {
+	t.Helper()
+	database, err := db.Open(":memory:")
+	if err != nil {
+		t.Fatalf("open db: %v", err)
+	}
+	t.Cleanup(func() { database.Close() })
+
+	llm := handlers.NewLLMClient(llmURL, "test-key", "test-model")
+	h := handlers.NewRecipeHandler(database, llm)
+
+	r := chi.NewRouter()
+	r.Get("/kochbuch/api/recipes", h.List)
+	r.Post("/kochbuch/api/recipes", h.Create)
+	r.Get("/kochbuch/api/recipes/{id}", h.Get)
+	r.Put("/kochbuch/api/recipes/{id}", h.Update)
+	r.Delete("/kochbuch/api/recipes/{id}", h.Delete)
+
+	srv := httptest.NewServer(r)
+	t.Cleanup(srv.Close)
+	return srv
+}
 
 func itoa(id int64) string {
 	return fmt.Sprintf("%d", id)
