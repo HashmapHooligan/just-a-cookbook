@@ -136,7 +136,7 @@ func TestList_Search_FTSOperators(t *testing.T) {
 
 	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe())
 
-	// FTS5 boolean operators must be treated as literals, not syntax — must not return 500.
+	// Special characters and boolean-looking words must not crash — must not return 500.
 	operators := []string{"OR", "AND", "NEAR", "NOT", "*", "pasta OR pizza", "pasta AND pizza"}
 	for _, q := range operators {
 		resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=" + url.QueryEscape(q))
@@ -189,9 +189,10 @@ func TestList_Search_WhitespaceQuery(t *testing.T) {
 	defer server.Close()
 
 	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe())
+	postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "Pizza"})
 
-	// Whitespace-only query must return a JSON array, not null.
-	resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=" + url.QueryEscape(" "))
+	// Whitespace-only query has no words after splitting — must return all recipes.
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=" + url.QueryEscape("   "))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -199,8 +200,87 @@ func TestList_Search_WhitespaceQuery(t *testing.T) {
 		t.Fatalf("expected 200, got %d", resp.StatusCode)
 	}
 	results := decode[[]models.RecipeSummary](t, resp)
-	if results == nil {
-		t.Fatal("expected JSON array, got null")
+	if len(results) != 2 {
+		t.Fatalf("expected 2 with whitespace-only q, got %d", len(results))
+	}
+}
+
+func TestList_Search_MultiWord(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe()) // "Pasta Carbonara"
+	postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "Pizza Margherita"})
+
+	// Both words must match the same recipe.
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=" + url.QueryEscape("pasta carbonara"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	results := decode[[]models.RecipeSummary](t, resp)
+	if len(results) != 1 {
+		t.Fatalf("expected 1, got %d", len(results))
+	}
+	if results[0].Title != "Pasta Carbonara" {
+		t.Fatalf("expected Pasta Carbonara, got %s", results[0].Title)
+	}
+}
+
+func TestList_Search_MultiWord_NoPartialMatch(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe()) // "Pasta Carbonara"
+	postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "Pizza Margherita"})
+
+	// Words from different recipes — must return nothing.
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=" + url.QueryEscape("pasta pizza"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	results := decode[[]models.RecipeSummary](t, resp)
+	if len(results) != 0 {
+		t.Fatalf("expected 0, got %d", len(results))
+	}
+}
+
+func TestList_Search_MultiWord_TitleAndTag(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	// sampleRecipe() has title "Pasta Carbonara" and tag "Italian"
+	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe())
+	postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "Pizza Margherita"})
+
+	// One word matches title, other matches tag — recipe must appear.
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=" + url.QueryEscape("pasta italian"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	results := decode[[]models.RecipeSummary](t, resp)
+	if len(results) != 1 {
+		t.Fatalf("expected 1, got %d", len(results))
+	}
+	if results[0].Title != "Pasta Carbonara" {
+		t.Fatalf("expected Pasta Carbonara, got %s", results[0].Title)
+	}
+}
+
+func TestList_Search_MultiWord_ExtraSpaces(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe()) // "Pasta Carbonara"
+	postJSON(t, server, "/kochbuch/api/recipes", models.Recipe{Title: "Pizza Margherita"})
+
+	// Multiple spaces between words must behave identically to single space.
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=" + url.QueryEscape("pasta   carbonara"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	results := decode[[]models.RecipeSummary](t, resp)
+	if len(results) != 1 {
+		t.Fatalf("expected 1, got %d", len(results))
 	}
 }
 

@@ -57,19 +57,32 @@ func (h *RecipeHandler) List(w http.ResponseWriter, r *http.Request) {
 	var rows *sql.Rows
 	var err error
 
-	if query != "" {
-		rows, err = h.db.QueryContext(r.Context(), `
+	words := strings.Fields(query)
+	if len(words) > 0 {
+		// Aggregate all tag names per recipe into one space-separated string.
+		// This lets us check each search word against title + all tags with a single
+		// LIKE per word — avoiding the one-to-many problem where a naive JOIN would
+		// only see one tag per row, breaking AND-matching across multiple tags.
+		baseQuery := `
 			SELECT r.id, r.title
 			FROM recipes r
-			WHERE r.id IN (
-				SELECT rowid FROM recipes_fts WHERE recipes_fts MATCH ?
-				UNION
-				SELECT rt.recipe_id FROM recipe_tags rt
-				JOIN tags t ON t.id = rt.tag_id
-				WHERE t.name LIKE '%' || ? || '%'
-			)
-			ORDER BY r.title ASC
-		`, ftsPrefix(query), query)
+			LEFT JOIN (
+				SELECT rt.recipe_id, GROUP_CONCAT(t.name, ' ') AS all_tags
+				FROM recipe_tags rt JOIN tags t ON t.id = rt.tag_id
+				GROUP BY rt.recipe_id
+			) agg ON agg.recipe_id = r.id
+			WHERE `
+
+		// One LIKE clause per word, AND-ed: every word must appear in title or tags.
+		clauses := make([]string, len(words))
+		args := make([]any, len(words))
+		for i, word := range words {
+			clauses[i] = "(r.title || ' ' || COALESCE(agg.all_tags, '')) LIKE '%' || ? || '%'"
+			args[i] = word
+		}
+
+		sql := baseQuery + strings.Join(clauses, " AND ") + " ORDER BY r.title ASC"
+		rows, err = h.db.QueryContext(r.Context(), sql, args...)
 	} else {
 		rows, err = h.db.QueryContext(r.Context(), `
 			SELECT id, title FROM recipes ORDER BY title ASC
@@ -394,12 +407,4 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 
 func writeError(w http.ResponseWriter, status int, msg string) {
 	writeJSON(w, status, map[string]string{"error": msg})
-}
-
-// ftsPrefix wraps q in FTS5 double-quote syntax and appends * for prefix matching.
-// Internal double-quotes are doubled ("" is the FTS5 escape sequence) so user input
-// cannot inject FTS5 operators like OR, AND, NEAR, or column filters.
-func ftsPrefix(q string) string {
-	escaped := strings.ReplaceAll(q, `"`, `""`)
-	return `"` + escaped + `"*`
 }
