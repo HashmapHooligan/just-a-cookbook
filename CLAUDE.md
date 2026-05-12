@@ -64,3 +64,5 @@ Make sure to use a _consistent_ architecture and code structure. No need to be p
 When is makes sense, extract utility functions and/or frontend modules in separate files.
 
 Claude is used in sandbox mode. Thus, if you need to build or test something, let me know. I will execute the commands for you.
+
+@karpathy-rules.md
