@@ -64,7 +64,8 @@ const searchQuery = ref('');
 onMounted(() => store.loadRecipes());
 
 function onSearch(val: string | number | null) {
-  void store.loadRecipes(val ? String(val) : undefined);
+  const q = val ? String(val).trim() : '';
+  void store.loadRecipes(q || undefined);
 }
 </script>
 

@@ -79,7 +79,7 @@ func (h *RecipeHandler) List(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, "query failed")
 		return
 	}
-	var recipeSummaries []models.RecipeSummary
+	recipeSummaries := make([]models.RecipeSummary, 0)
 	for rows.Next() {
 		var s models.RecipeSummary
 		if err := rows.Scan(&s.ID, &s.Title); err != nil {

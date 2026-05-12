@@ -184,6 +184,26 @@ func TestList_Search_EmptyQueryParam(t *testing.T) {
 	}
 }
 
+func TestList_Search_WhitespaceQuery(t *testing.T) {
+	server := setupTestServer(t)
+	defer server.Close()
+
+	postJSON(t, server, "/kochbuch/api/recipes", sampleRecipe())
+
+	// Whitespace-only query must return a JSON array, not null.
+	resp, err := http.Get(server.URL + "/kochbuch/api/recipes?q=" + url.QueryEscape(" "))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("expected 200, got %d", resp.StatusCode)
+	}
+	results := decode[[]models.RecipeSummary](t, resp)
+	if results == nil {
+		t.Fatal("expected JSON array, got null")
+	}
+}
+
 func TestList_Search_NoMatch(t *testing.T) {
 	server := setupTestServer(t)
 	defer server.Close()
