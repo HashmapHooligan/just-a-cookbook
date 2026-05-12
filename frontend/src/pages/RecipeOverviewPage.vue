@@ -2,11 +2,11 @@
   <q-page class="overview-page">
     <div class="overview-page__inner">
       <div class="overview-page__header">
-        <h1 class="font-headline-xl overview-page__title">{{ t('overview.title') }}</h1>
+        <h1 class="font-headline-xl overview-page__title">Mein Kochbuch</h1>
         <div class="overview-page__search">
           <q-input
             v-model="searchQuery"
-            :placeholder="t('overview.searchPlaceholder')"
+            placeholder="Rezepte suchen..."
             outlined
             dense
             clearable
@@ -22,14 +22,14 @@
 
       <div v-if="store.recipes.length === 0 && !store.loading" class="overview-page__empty">
         <p class="font-body-lg" style="color: var(--color-on-surface-variant)">
-          {{ t('overview.noResults') }}
+          Keine Rezepte gefunden.
         </p>
         <p class="font-body-md" style="color: var(--color-outline)">
-          {{ t('overview.noResultsHint') }}
+          Füge dein erstes Rezept hinzu!
         </p>
         <q-btn
           unelevated
-          :label="t('nav.newRecipe')"
+          label="Neues Rezept"
           icon="add"
           to="/recipes/new"
           style="background-color: var(--color-secondary-container); color: var(--color-on-secondary)"
@@ -53,11 +53,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
 import { useRecipeStore } from 'src/stores/recipes';
 import RecipeCard from 'src/components/RecipeCard.vue';
 
-const { t } = useI18n();
 const router = useRouter();
 const store = useRecipeStore();
 

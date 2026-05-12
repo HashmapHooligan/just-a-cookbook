@@ -8,7 +8,7 @@
         </div>
         <h1 class="font-headline-xl detail-page__title">{{ store.currentRecipe.title }}</h1>
         <p v-if="store.currentRecipe.source" class="font-body-md detail-page__source">
-          {{ t('detail.source') }}: {{ store.currentRecipe.source }}
+          Quelle: {{ store.currentRecipe.source }}
         </p>
       </div>
 
@@ -16,7 +16,7 @@
       <div class="detail-page__actions">
         <q-btn
           unelevated
-          :label="t('detail.edit')"
+          label="Bearbeiten"
           icon="edit"
           :to="`/recipes/${store.currentRecipe.id}/edit`"
           class="font-label-lg"
@@ -24,7 +24,7 @@
         />
         <q-btn
           flat
-          :label="t('detail.delete')"
+          label="Löschen"
           icon="delete"
           class="font-label-lg"
           style="color: var(--color-negative)"
@@ -37,7 +37,7 @@
       <!-- Ingredients -->
       <section class="detail-page__section">
         <h2 class="font-headline-lg detail-page__section-title">
-          {{ t('detail.ingredients') }}
+          Zutaten
         </h2>
         <div class="detail-page__ingredients">
           <IngredientItem
@@ -53,7 +53,7 @@
       <!-- Steps -->
       <section class="detail-page__section">
         <h2 class="font-headline-lg detail-page__section-title">
-          {{ t('detail.steps') }}
+          Zubereitung
         </h2>
         <div class="detail-page__steps">
           <StepItem
@@ -70,17 +70,17 @@
     <q-dialog v-model="deleteDialog">
       <q-card style="min-width: 320px; border-radius: 16px;">
         <q-card-section>
-          <div class="font-headline-md">{{ t('detail.confirmDelete') }}</div>
+          <div class="font-headline-md">Rezept löschen?</div>
           <p class="font-body-md q-mt-sm" style="color: var(--color-on-surface-variant)">
-            {{ t('detail.confirmDeleteMessage') }}
+            Diese Aktion kann nicht rückgängig gemacht werden.
           </p>
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat :label="t('confirm.no')" v-close-popup class="font-label-lg" />
+          <q-btn flat label="Abbrechen" v-close-popup class="font-label-lg" />
           <q-btn
             unelevated
             color="negative"
-            :label="t('confirm.yes')"
+            label="Ja"
             class="font-label-lg"
             @click="doDelete"
           />
@@ -95,23 +95,21 @@
 
   <q-page v-else class="detail-page detail-page--loading">
     <p class="font-body-lg" style="color: var(--color-on-surface-variant)">
-      {{ t('errors.notFound') }}
+      Rezept nicht gefunden.
     </p>
-    <q-btn flat :label="t('nav.recipes')" to="/" class="q-mt-md font-label-lg" />
+    <q-btn flat label="Rezepte" to="/" class="q-mt-md font-label-lg" />
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import { useRecipeStore } from 'src/stores/recipes';
 import TagChip from 'src/components/TagChip.vue';
 import IngredientItem from 'src/components/IngredientItem.vue';
 import StepItem from 'src/components/StepItem.vue';
 
-const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const store = useRecipeStore();
@@ -132,7 +130,7 @@ async function doDelete() {
     $q.notify({ type: 'positive', message: 'Recipe deleted' });
     void router.push('/');
   } catch {
-    $q.notify({ type: 'negative', message: t('errors.deleteFailed') });
+    $q.notify({ type: 'negative', message: 'Rezept konnte nicht gelöscht werden.' });
   }
 }
 </script>

@@ -3,10 +3,10 @@
     <div class="form-page__inner">
       <div class="form-page__header">
         <q-btn flat round icon="close" @click="router.back()" />
-        <h1 class="font-headline-md form-page__header-title">{{ t('bulkAdd.title') }}</h1>
+        <h1 class="font-headline-md form-page__header-title">Massenimport</h1>
         <q-btn
           unelevated
-          :label="t('bulkAdd.importButton')"
+          label="Alle importieren"
           :loading="running"
           :disable="files.length === 0"
           class="font-label-lg"
@@ -35,7 +35,7 @@
           photo_library
         </span>
         <p class="font-body-md" style="color: var(--color-on-surface-variant); margin: 8px 0 0">
-          {{ t('bulkAdd.hint') }}
+          Bilder hier ablegen oder klicken zum Auswählen
         </p>
       </div>
 
@@ -53,12 +53,10 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
-import { useI18n } from 'vue-i18n';
 import { importRecipeFromImage, createRecipe } from 'src/api/recipes';
 
 const router = useRouter();
 const $q = useQuasar();
-const { t } = useI18n();
 
 const fileInput = ref<HTMLInputElement | null>(null);
 const dragging = ref(false);
@@ -109,11 +107,11 @@ async function runImport() {
 
   let message: string;
   if (failed === 0) {
-    message = t('bulkAdd.success', { n: succeeded });
+    message = `${succeeded} Rezept(e) hinzugefügt.`;
   } else if (succeeded === 0) {
-    message = t('bulkAdd.allFailed');
+    message = 'Alle Importe fehlgeschlagen.';
   } else {
-    message = t('bulkAdd.partial', { success: succeeded, total, failed });
+    message = `${succeeded} von ${total} Rezepten hinzugefügt (${failed} fehlgeschlagen).`;
   }
 
   $q.notify({ message, type: failed === 0 ? 'positive' : 'warning' });

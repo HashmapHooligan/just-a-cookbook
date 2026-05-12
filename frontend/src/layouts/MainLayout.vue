@@ -12,7 +12,7 @@
           flat
           no-caps
           split
-          :label="t('nav.newRecipe')"
+          label="Neues Rezept"
           icon="add"
           to="/recipes/new"
           style="color: var(--color-on-header)"
@@ -23,20 +23,10 @@
               <q-item-section avatar>
                 <q-icon name="photo_library" />
               </q-item-section>
-              <q-item-section>{{ t('nav.bulkAdd') }}</q-item-section>
+              <q-item-section>Massenimport</q-item-section>
             </q-item>
           </q-list>
         </q-btn-dropdown>
-
-        <q-btn
-          flat
-          round
-          :label="localeStore.current === 'en-US' ? 'DE' : 'EN'"
-          class="font-label-lg q-mr-xs"
-          style="color: var(--color-on-header)"
-          @click="localeStore.toggle()"
-          title="Switch language"
-        />
 
         <q-btn
           flat
@@ -56,12 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
-import { useLocaleStore } from 'src/stores/locale';
 import { useDarkModeStore } from 'src/stores/darkMode';
 import JustALogo from 'src/components/JustALogo.vue';
 
-const { t } = useI18n();
-const localeStore = useLocaleStore();
 const darkModeStore = useDarkModeStore();
 </script>

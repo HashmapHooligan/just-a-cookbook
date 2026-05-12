@@ -18,14 +18,14 @@
     <div v-if="!loading" class="image-import__content">
       <span class="material-symbol" style="font-size: 48px; color: var(--color-outline)">image</span>
       <p class="font-body-md" style="color: var(--color-on-surface-variant); margin: 8px 0 0">
-        {{ t('form.importHint') }}
+        Bild ablegen oder klicken zum Hochladen
       </p>
     </div>
 
     <div v-else class="image-import__content">
       <q-spinner-dots size="48px" color="secondary" />
       <p class="font-body-md" style="color: var(--color-on-surface-variant); margin: 8px 0 0">
-        {{ t('form.importing') }}
+        Bild wird gelesen...
       </p>
     </div>
   </div>
@@ -33,11 +33,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 const emit = defineEmits<{ import: [file: File] }>();
 
-const { t } = useI18n();
 const fileInput = ref<HTMLInputElement | null>(null);
 const dragging = ref(false);
 const loading = defineModel<boolean>('loading', { default: false });

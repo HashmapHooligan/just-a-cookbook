@@ -5,11 +5,11 @@
       <div class="form-page__header">
         <q-btn flat round icon="close" @click="router.back()" />
         <h1 class="font-headline-md form-page__header-title">
-          {{ isEdit ? t('form.editTitle') : t('form.addTitle') }}
+          {{ isEdit ? 'Rezept bearbeiten' : 'Rezept hinzufügen' }}
         </h1>
         <q-btn
           unelevated
-          :label="t('form.save')"
+          label="Speichern"
           :loading="store.loading"
           class="font-label-lg"
           style="background-color: var(--color-primary-container); color: var(--color-on-primary)"
@@ -19,10 +19,10 @@
 
       <!-- Image Import (only on add mode) -->
       <section v-if="!isEdit" class="form-page__section">
-        <h2 class="font-headline-md form-page__section-title">{{ t('form.importTitle') }}</h2>
+        <h2 class="font-headline-md form-page__section-title">Aus Bild importieren</h2>
         <ImageImport v-model:loading="importing" @import="onImport" />
         <p v-if="importError" class="font-body-sm form-page__import-error">
-          {{ t('form.importError') }}
+          Import fehlgeschlagen. Erneut versuchen.
         </p>
       </section>
 
@@ -31,40 +31,40 @@
       <!-- Title -->
       <div class="form-page__field">
         <label class="form-page__label font-label-lg">
-          {{ t('form.title') }} <span style="color: var(--color-secondary-container)">*</span>
+          Titel <span style="color: var(--color-secondary-container)">*</span>
         </label>
         <input
           v-model="form.title"
           class="form-page__input font-body-md"
-          :placeholder="t('form.title')"
+          placeholder="Titel"
           :class="{ 'form-page__input--error': titleError }"
         />
         <p v-if="titleError" class="form-page__field-error font-body-sm">
-          {{ t('form.titleRequired') }}
+          Titel ist erforderlich
         </p>
       </div>
 
       <!-- Source -->
       <div class="form-page__field">
-        <label class="form-page__label font-label-lg">{{ t('form.source') }}</label>
+        <label class="form-page__label font-label-lg">Quelle / Autor</label>
         <input
           v-model="form.source"
           class="form-page__input font-body-md"
-          :placeholder="t('form.source')"
+          placeholder="Quelle / Autor"
         />
       </div>
 
       <!-- Tags -->
       <div class="form-page__field">
-        <label class="form-page__label font-label-lg">{{ t('form.tags') }}</label>
-        <TagInput v-model="form.tags" :placeholder="t('form.tagsHint')" />
+        <label class="form-page__label font-label-lg">Tags</label>
+        <TagInput v-model="form.tags" placeholder="Enter drücken zum Hinzufügen" />
       </div>
 
       <q-separator class="q-my-lg" style="background-color: var(--color-outline-variant)" />
 
       <!-- Ingredients -->
       <section class="form-page__section">
-        <h2 class="font-headline-md form-page__section-title">{{ t('form.ingredients') }}</h2>
+        <h2 class="font-headline-md form-page__section-title">Zutaten</h2>
         <div
           v-for="(ing, i) in form.ingredients"
           :key="i"
@@ -73,7 +73,7 @@
           <input
             v-model="ing.name"
             class="form-page__input form-page__input--name font-body-md"
-            :placeholder="t('form.ingredientName')"
+            placeholder="Name"
             @keydown.enter.prevent="addIngredient"
           />
           <input
@@ -82,13 +82,13 @@
             min="0"
             step="any"
             class="form-page__input form-page__input--amount font-body-md"
-            :placeholder="t('form.ingredientAmount')"
+            placeholder="Menge"
             @keydown.enter.prevent="addIngredient"
           />
           <input
             v-model="ing.amountUnit"
             class="form-page__input form-page__input--unit font-body-md"
-            :placeholder="t('form.ingredientUnit')"
+            placeholder="Einheit"
             @keydown.enter.prevent="addIngredient"
           />
           <q-btn
@@ -103,7 +103,7 @@
         <q-btn
           flat
           no-caps
-          :label="t('form.addIngredient')"
+          label="Zutat hinzufügen"
           icon="add"
           class="font-label-lg q-mt-sm"
           style="color: var(--color-secondary-container)"
@@ -115,13 +115,13 @@
 
       <!-- Steps -->
       <section class="form-page__section">
-        <h2 class="font-headline-md form-page__section-title">{{ t('form.steps') }}</h2>
+        <h2 class="font-headline-md form-page__section-title">Zubereitung</h2>
         <div v-for="(step, i) in form.steps" :key="i" class="form-page__step-row">
           <div class="step-number">{{ i + 1 }}</div>
           <textarea
             v-model="step.description"
             class="form-page__textarea font-body-md"
-            :placeholder="t('form.stepDescription')"
+            placeholder="Schrittbeschreibung"
             rows="2"
             @keydown.enter.exact.prevent="addStep"
           />
@@ -137,7 +137,7 @@
         <q-btn
           flat
           no-caps
-          :label="t('form.addStep')"
+          label="Schritt hinzufügen"
           icon="add"
           class="font-label-lg q-mt-sm"
           style="color: var(--color-secondary-container)"
@@ -151,14 +151,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import { useRecipeStore } from 'src/stores/recipes';
 import type { Recipe, Ingredient, Step } from 'src/models/recipe';
 import TagInput from 'src/components/TagInput.vue';
 import ImageImport from 'src/components/ImageImport.vue';
 
-const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const store = useRecipeStore();
@@ -196,10 +194,10 @@ async function onImport(file: File) {
       steps: imported.steps.map((s, i) => ({ ...s, position: i })),
       tags: imported.tags ?? [],
     };
-    $q.notify({ type: 'positive', message: t('form.importSuccess') });
+    $q.notify({ type: 'positive', message: 'Rezept importiert! Überprüfen und speichern.' });
   } catch {
     importError.value = true;
-    $q.notify({ type: 'negative', message: t('form.importError') });
+    $q.notify({ type: 'negative', message: 'Import fehlgeschlagen. Erneut versuchen.' });
   } finally {
     importing.value = false;
   }
@@ -250,7 +248,7 @@ async function submit() {
     $q.notify({ type: 'positive', message: 'Recipe saved!' });
     void router.push(`/recipes/${saved.id}`);
   } catch {
-    $q.notify({ type: 'negative', message: t('errors.saveFailed') });
+    $q.notify({ type: 'negative', message: 'Rezept konnte nicht gespeichert werden.' });
   }
 }
 </script>
