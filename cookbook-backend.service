@@ -1,0 +1,13 @@
+# Linux systemd service to run the backend
+[Unit]
+Description=Just a Cookbook Backend
+After=network.target
+
+[Service]
+User=steffen
+WorkingDirectory=/home/steffen/git/just-a-cookbook/backend
+ExecStart=/usr/local/go/bin/go run .
+Environment=HOME=/home/steffen
+
+[Install]
+WantedBy=multi-user.target
